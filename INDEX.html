@@ -64,7 +64,7 @@
     <div id="start-screen" class="w-full max-w-2xl p-8 bg-gray-800 rounded-xl shadow-2xl text-center">
         <h1 class="text-4xl font-bold text-white mb-4">Probabilidade e Estatística</h1>
         <p class="text-lg text-gray-300 mb-6">
-            Prepare-se para testar suas habilidades em probabilidade e estatística! Este desafio abordará conceitos como cálculo de probabilidade simples, média, mediana, moda e interpretação de dados.
+            Prepare-se para um desafio avançado em probabilidade e estatística, com questões contextualizadas e desafiadoras.
         </p>
         <p class="text-md text-gray-400 mb-8">Você terá 8 questões para resolver. Boa sorte!</p>
         <button id="start-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 transform hover:scale-105">
@@ -116,52 +116,52 @@
     <script>
         const quizData = [
             {
-                question: "Uma urna contém 5 bolas vermelhas, 3 azuis e 2 verdes. Qual é a probabilidade de retirar uma bola azul ao acaso?",
-                answers: ["30%", "3%", "10%", "50%"],
+                question: "Uma pesquisa com 500 pessoas revelou que 280 usam ônibus, 210 usam carro e 70 usam ambos. Qual a probabilidade de uma pessoa selecionada ao acaso usar apenas ônibus?<br><small>Se necessário, <a href='https://www.calculator.io/pt/estat%C3%ADsticas/' target='_blank' class='text-indigo-400 hover:underline'>utilize esse site</a>.</small>",
+                answers: ["42%", "56%", "14%", "28%"],
+                correct: "42%",
+                explanation: "O número de pessoas que usa apenas ônibus é 280 (total ônibus) - 70 (ambos) = 210. A probabilidade é 210/500 = 0,42 ou 42%."
+            },
+            {
+                question: "Numa urna há 5 bolas vermelhas, 3 brancas e 2 azuis. Retirando-se três bolas, sem reposição, qual a probabilidade de saírem exatamente duas bolas vermelhas e uma azul?<br><small>Se necessário, <a href='https://www.calculator.io/pt/estat%C3%ADsticas/' target='_blank' class='text-indigo-400 hover:underline'>utilize esse site</a>.</small>",
+                answers: ["1/6 (aprox. 16,7%)", "1/120", "2/15", "3/8"],
+                correct: "1/6 (aprox. 16,7%)",
+                explanation: "Casos totais: C(10,3) = 120. Casos favoráveis (2 vermelhas E 1 azul): C(5,2) * C(2,1) = 10 * 2 = 20. A probabilidade é 20/120 = 1/6."
+            },
+            {
+                question: "Dois servidores independentes, A e B, têm 95% e 90% de chance de funcionar por um dia, respectivamente. O sistema opera se pelo menos um deles funcionar. Qual a chance do sistema falhar?<br><small>Se necessário, <a href='https://www.calculator.io/pt/estat%C3%ADsticas/' target='_blank' class='text-indigo-400 hover:underline'>utilize esse site</a>.</small>",
+                answers: ["0.5%", "5%", "10%", "15%"],
+                correct: "0.5%",
+                explanation: "O sistema falha se AMBOS falharem. P(A falhar) = 1 - 0.95 = 0.05. P(B falhar) = 1 - 0.90 = 0.10. A probabilidade de ambos falharem é 0.05 * 0.10 = 0.005, ou 0.5%."
+            },
+            {
+                question: "Para uma senha, um usuário deve escolher 4 algarismos distintos do conjunto {1, 2, 3, 4, 5, 6}. Qual a probabilidade de uma senha aleatória começar com um número par e terminar com um ímpar?<br><small>Se necessário, <a href='https://www.calculator.io/pt/estat%C3%ADsticas/' target='_blank' class='text-indigo-400 hover:underline'>utilize esse site</a>.</small>",
+                answers: ["30%", "25%", "50%", "15%"],
                 correct: "30%",
-                explanation: "Existem 10 bolas no total (5+3+2). A chance de tirar uma azul é de 3 em 10, o que corresponde a 3/10 ou 30%."
+                explanation: "Casos favoráveis: 3 opções pares para o início * 3 opções ímpares para o fim * 4 opções para o 2º * 3 para o 3º = 108. Casos totais: 6*5*4*3 = 360. Probabilidade: 108/360 = 3/10 ou 30%."
             },
             {
-                question: "As notas de um aluno em 5 provas foram: 7, 8, 6, 9, 5. Qual é a média das notas?",
-                answers: ["7.0", "6.5", "7.5", "8.0"],
-                correct: "7.0",
-                explanation: "A média é a soma de todas as notas dividida pelo número de provas. (7+8+6+9+5) / 5 = 35 / 5 = 7.0."
+                question: "Numa caixa com 10 lâmpadas, 3 estão queimadas. Duas lâmpadas são retiradas em sequência, sem reposição. Se a primeira estava queimada, qual a chance da segunda também estar?<br><small>Se necessário, <a href='https://www.calculator.io/pt/estat%C3%ADsticas/' target='_blank' class='text-indigo-400 hover:underline'>utilize esse site</a>.</small>",
+                answers: ["2/9 (aprox. 22%)", "3/10 (30%)", "1/3 (aprox. 33%)", "2/10 (20%)"],
+                correct: "2/9 (aprox. 22%)",
+                explanation: "Após retirar uma lâmpada queimada, restam 9 lâmpadas na caixa, das quais 2 estão queimadas. A probabilidade é, portanto, 2/9."
             },
             {
-                question: "Considerando o conjunto de dados: 2, 3, 4, 5, 5, 6, 9. Qual é a mediana?",
-                answers: ["4", "5.5", "5", "4.5"],
-                correct: "5",
-                explanation: "A mediana é o valor central de um conjunto de dados ordenado. Como o conjunto já está em ordem, o valor no meio é 5."
+                question: "A distribuição de salários em uma empresa é: 10 funcionários ganham R$2.000, 5 ganham R$4.000, e 5 ganham R$12.000. Qual afirmação é correta sobre a média e a mediana dos salários?<br><small>Se necessário, <a href='https://www.calculator.io/pt/estat%C3%ADsticas/' target='_blank' class='text-indigo-400 hover:underline'>utilize esse site</a>.</small>",
+                answers: ["A média é maior que a mediana.", "A mediana é maior que a média.", "A média é igual à mediana.", "Não é possível comparar."],
+                correct: "A média é maior que a mediana.",
+                explanation: "Total de 20 funcionários. A mediana é o salário do 10º/11º funcionário, que é R$2.000. A média é (10*2000 + 5*4000 + 5*12000)/20 = R$5.000. Portanto, a média é maior que a mediana."
             },
             {
-                question: "Qual é a moda no seguinte conjunto de números: 10, 20, 30, 20, 40, 50, 20?",
-                answers: ["30", "40", "10", "20"],
-                correct: "20",
-                explanation: "A moda é o número que aparece com mais frequência em um conjunto de dados. O número 20 aparece 3 vezes, mais do que qualquer outro."
+                question: "Um jogador lança dois dados. Ele ganha R$ 10 se a soma for 7, mas perde R$ 2 se a soma for qualquer outro valor. Qual é o valor esperado de ganho/perda por jogada?<br><small>Se necessário, <a href='https://www.calculator.io/pt/estat%C3%ADsticas/' target='_blank' class='text-indigo-400 hover:underline'>utilize esse site</a>.</small>",
+                answers: ["R$ 0,00", "R$ 1,33 de ganho", "R$ 0,50 de perda", "R$ 2,00 de perda"],
+                correct: "R$ 0,00",
+                explanation: "A probabilidade da soma ser 7 é 6/36 = 1/6. A de não ser 7 é 30/36 = 5/6. O valor esperado é E(X) = (1/6)*(+10) + (5/6)*(-2) = 10/6 - 10/6 = 0. O jogo é considerado 'justo'."
             },
             {
-                question: "Ao jogar um dado de 6 faces e uma moeda, qual a probabilidade de obter um número par no dado E a face 'cara' na moeda?",
-                answers: ["1/4", "1/2", "1/6", "1/12"],
-                correct: "1/4",
-                explanation: "A probabilidade de um número par (2, 4, 6) é 3/6 = 1/2. A de dar 'cara' é 1/2. Como são eventos independentes, multiplicamos as probabilidades: 1/2 * 1/2 = 1/4."
-            },
-            {
-                question: "De um baralho de 52 cartas, qual a probabilidade de tirar uma carta que seja um Rei OU uma carta de Copas?",
-                answers: ["17/52", "1/52", "4/13", "16/52"],
-                correct: "16/52",
-                explanation: "Existem 4 Reis e 13 cartas de Copas. No entanto, o Rei de Copas é contado duas vezes. Então, temos 4 Reis + 13 Copas - 1 Rei de Copas = 16 cartas. A probabilidade é 16/52."
-            },
-            {
-                question: "O técnico de um time de basquete registrou as seguintes pontuações de sua equipe nos últimos 5 jogos: 85, 92, 88, 105, 90. Qual a amplitude (diferença entre o maior e o menor valor) desses dados?",
-                answers: ["20", "15", "25", "10"],
-                correct: "20",
-                explanation: "A amplitude é a diferença entre o valor máximo e o mínimo. O máximo é 105 e o mínimo é 85. A diferença é 105 - 85 = 20."
-            },
-            {
-                question: "Se você lança dois dados de 6 faces, qual o número total de resultados possíveis no espaço amostral?",
-                answers: ["12", "6", "36", "24"],
-                correct: "36",
-                explanation: "Cada dado tem 6 resultados possíveis. Como são dois dados, multiplicamos as possibilidades: 6 resultados para o primeiro dado × 6 resultados para o segundo dado = 36 resultados totais."
+                question: "Uma doença afeta 1% da população. Um teste para detectá-la acerta 99% dos casos de pessoas doentes, mas dá 5% de 'falso positivo' em pessoas sadias. Se uma pessoa testa positivo, qual a chance aproximada dela ter a doença?<br><small>Se necessário, <a href='https://www.calculator.io/pt/estat%C3%ADsticas/' target='_blank' class='text-indigo-400 hover:underline'>utilize esse site</a>.</small>",
+                answers: ["16.8%", "99%", "95%", "5%"],
+                correct: "16.8%",
+                explanation: "Em 10.000 pessoas: 100 doentes e 9.900 sadias. Positivos verdadeiros: 0.99*100 = 99. Falsos positivos: 0.05*9900 = 495. Total de positivos: 99+495 = 594. Probabilidade: 99/594 ≈ 0.167 ou 16.7%."
             }
         ];
 
@@ -197,7 +197,7 @@
             resetState();
             const currentQuestion = quizData[currentQuestionIndex];
             questionNumberEl.textContent = currentQuestionIndex + 1;
-            questionTextEl.textContent = currentQuestion.question;
+            questionTextEl.innerHTML = currentQuestion.question;
 
             currentQuestion.answers.forEach(answer => {
                 const button = document.createElement('button');
@@ -246,7 +246,7 @@
             if(quizData.length > currentQuestionIndex + 1) {
                 nextBtn.classList.remove('hidden');
             } else {
-                setTimeout(showEndScreen, 2000);
+                setTimeout(showEndScreen, 3000);
             }
         }
         
@@ -279,4 +279,7 @@
     </script>
 </body>
 </html>
+
+
+
 
