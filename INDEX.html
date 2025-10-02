@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probabilidade e Estatística</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            background-color: #111827; /* Fundo escuro */
+        }
+        .perspective-container {
+            perspective: 1000px;
+        }
+        .die {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: spin 3s infinite linear;
+        }
+        .face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid #9ca3af;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #f3f4f6;
+            border-radius: 12px;
+        }
+        .front  { transform: translateZ(50px); }
+        .back   { transform: rotateY(180deg) translateZ(50px); }
+        .right  { transform: rotateY(90deg) translateZ(50px); }
+        .left   { transform: rotateY(-90deg) translateZ(50px); }
+        .top    { transform: rotateX(90deg) translateZ(50px); }
+        .bottom { transform: rotateX(-90deg) translateZ(50px); }
+
+        @keyframes spin {
+            from { transform: rotateX(0deg) rotateY(0deg); }
+            to   { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .feedback-correct {
+            border-left: 5px solid #22c55e;
+            background-color: #166534;
+        }
+
+        .feedback-incorrect {
+            border-left: 5px solid #ef4444;
+            background-color: #991b1b;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen">
+
+    <div id="start-screen" class="w-full max-w-2xl p-8 bg-gray-800 rounded-xl shadow-2xl text-center">
+        <h1 class="text-4xl font-bold text-white mb-4">Probabilidade e Estatística</h1>
+        <p class="text-lg text-gray-300 mb-6">
+            Prepare-se para testar suas habilidades em probabilidade e estatística! Este desafio abordará conceitos como cálculo de probabilidade simples, média, mediana, moda e interpretação de dados.
+        </p>
+        <p class="text-md text-gray-400 mb-8">Você terá 8 questões para resolver. Boa sorte!</p>
+        <button id="start-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 transform hover:scale-105">
+            Começar!
+        </button>
+    </div>
+
+    <div id="transition-screen" class="hidden w-full h-full flex flex-col items-center justify-center space-y-8">
+        <div class="perspective-container">
+            <div class="die">
+                <div class="face front">⚀</div>
+                <div class="face back">⚅</div>
+                <div class="face right">⚃</div>
+                <div class="face left">⚂</div>
+                <div class="face top">⚄</div>
+                <div class="face bottom">⚁</div>
+            </div>
+        </div>
+        <p class="text-2xl text-gray-300 animate-pulse">Próxima questão...</p>
+    </div>
+
+
+    <div id="quiz-container" class="hidden w-full max-w-3xl p-8 bg-gray-800 rounded-xl shadow-2xl">
+        <div id="quiz-header" class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-indigo-400">Questão <span id="question-number"></span> de 8</h2>
+            <div id="score-display" class="text-lg font-semibold text-gray-300">Acertos: <span id="score">0</span></div>
+        </div>
+        <p id="question-text" class="text-xl text-gray-200 mb-8 min-h-[60px]"></p>
+        <div id="answer-buttons" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Buttons will be inserted here by JS -->
+        </div>
+        <div id="feedback" class="mt-8 p-4 rounded-lg text-white text-md hidden"></div>
+        <div class="mt-6 text-right">
+            <button id="next-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded-lg transition duration-300 hidden">
+                Próxima &rarr;
+            </button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="hidden w-full max-w-2xl p-8 bg-gray-800 rounded-xl shadow-2xl text-center">
+        <h1 class="text-4xl font-bold text-white mb-4">Desafio Concluído!</h1>
+        <p class="text-2xl text-gray-300 mb-6">Seu desempenho final foi:</p>
+        <div id="final-score" class="text-6xl font-bold text-indigo-400 mb-8"></div>
+        <button id="restart-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 transform hover:scale-105">
+            Tentar Novamente
+        </button>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Uma urna contém 5 bolas vermelhas, 3 azuis e 2 verdes. Qual é a probabilidade de retirar uma bola azul ao acaso?",
+                answers: ["30%", "3%", "10%", "50%"],
+                correct: "30%",
+                explanation: "Existem 10 bolas no total (5+3+2). A chance de tirar uma azul é de 3 em 10, o que corresponde a 3/10 ou 30%."
+            },
+            {
+                question: "As notas de um aluno em 5 provas foram: 7, 8, 6, 9, 5. Qual é a média das notas?",
+                answers: ["7.0", "6.5", "7.5", "8.0"],
+                correct: "7.0",
+                explanation: "A média é a soma de todas as notas dividida pelo número de provas. (7+8+6+9+5) / 5 = 35 / 5 = 7.0."
+            },
+            {
+                question: "Considerando o conjunto de dados: 2, 3, 4, 5, 5, 6, 9. Qual é a mediana?",
+                answers: ["4", "5.5", "5", "4.5"],
+                correct: "5",
+                explanation: "A mediana é o valor central de um conjunto de dados ordenado. Como o conjunto já está em ordem, o valor no meio é 5."
+            },
+            {
+                question: "Qual é a moda no seguinte conjunto de números: 10, 20, 30, 20, 40, 50, 20?",
+                answers: ["30", "40", "10", "20"],
+                correct: "20",
+                explanation: "A moda é o número que aparece com mais frequência em um conjunto de dados. O número 20 aparece 3 vezes, mais do que qualquer outro."
+            },
+            {
+                question: "Ao jogar um dado de 6 faces e uma moeda, qual a probabilidade de obter um número par no dado E a face 'cara' na moeda?",
+                answers: ["1/4", "1/2", "1/6", "1/12"],
+                correct: "1/4",
+                explanation: "A probabilidade de um número par (2, 4, 6) é 3/6 = 1/2. A de dar 'cara' é 1/2. Como são eventos independentes, multiplicamos as probabilidades: 1/2 * 1/2 = 1/4."
+            },
+            {
+                question: "De um baralho de 52 cartas, qual a probabilidade de tirar uma carta que seja um Rei OU uma carta de Copas?",
+                answers: ["17/52", "1/52", "4/13", "16/52"],
+                correct: "16/52",
+                explanation: "Existem 4 Reis e 13 cartas de Copas. No entanto, o Rei de Copas é contado duas vezes. Então, temos 4 Reis + 13 Copas - 1 Rei de Copas = 16 cartas. A probabilidade é 16/52."
+            },
+            {
+                question: "O técnico de um time de basquete registrou as seguintes pontuações de sua equipe nos últimos 5 jogos: 85, 92, 88, 105, 90. Qual a amplitude (diferença entre o maior e o menor valor) desses dados?",
+                answers: ["20", "15", "25", "10"],
+                correct: "20",
+                explanation: "A amplitude é a diferença entre o valor máximo e o mínimo. O máximo é 105 e o mínimo é 85. A diferença é 105 - 85 = 20."
+            },
+            {
+                question: "Se você lança dois dados de 6 faces, qual o número total de resultados possíveis no espaço amostral?",
+                answers: ["12", "6", "36", "24"],
+                correct: "36",
+                explanation: "Cada dado tem 6 resultados possíveis. Como são dois dados, multiplicamos as possibilidades: 6 resultados para o primeiro dado × 6 resultados para o segundo dado = 36 resultados totais."
+            }
+        ];
+
+        const startScreen = document.getElementById('start-screen');
+        const startBtn = document.getElementById('start-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const endScreen = document.getElementById('end-screen');
+        const transitionScreen = document.getElementById('transition-screen');
+
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const answerButtonsEl = document.getElementById('answer-buttons');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const scoreEl = document.getElementById('score');
+        const finalScoreEl = document.getElementById('final-score');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.textContent = score;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetState();
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionNumberEl.textContent = currentQuestionIndex + 1;
+            questionTextEl.textContent = currentQuestion.question;
+
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.innerText = answer;
+                button.classList.add('w-full', 'bg-gray-700', 'hover:bg-indigo-700', 'text-white', 'font-semibold', 'py-4', 'px-4', 'rounded-lg', 'transition', 'duration-200', 'text-left');
+                button.addEventListener('click', selectAnswer);
+                answerButtonsEl.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            feedbackEl.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            while (answerButtonsEl.firstChild) {
+                answerButtonsEl.removeChild(answerButtonsEl.firstChild);
+            }
+        }
+
+        function selectAnswer(e) {
+            const selectedButton = e.target;
+            const correct = selectedButton.innerText === quizData[currentQuestionIndex].correct;
+            
+            if (correct) {
+                score++;
+                scoreEl.textContent = score;
+                feedbackEl.innerHTML = `<strong>Parabéns, você acertou!</strong><br>${quizData[currentQuestionIndex].explanation}`;
+                feedbackEl.className = 'mt-8 p-4 rounded-lg text-white text-md feedback-correct';
+                selectedButton.classList.remove('bg-gray-700', 'hover:bg-indigo-700');
+                selectedButton.classList.add('bg-green-600');
+            } else {
+                feedbackEl.innerHTML = `<strong>Ops, não foi desta vez.</strong> A resposta correta é <strong>"${quizData[currentQuestionIndex].correct}"</strong>.<br>${quizData[currentQuestionIndex].explanation}`;
+                feedbackEl.className = 'mt-8 p-4 rounded-lg text-white text-md feedback-incorrect';
+                selectedButton.classList.remove('bg-gray-700', 'hover:bg-indigo-700');
+                selectedButton.classList.add('bg-red-600');
+            }
+
+            Array.from(answerButtonsEl.children).forEach(button => {
+                 button.disabled = true;
+                 if(button.innerText === quizData[currentQuestionIndex].correct) {
+                     button.classList.remove('bg-gray-700', 'hover:bg-indigo-700');
+                     button.classList.add('bg-green-600');
+                 }
+            });
+
+            feedbackEl.classList.remove('hidden');
+            if(quizData.length > currentQuestionIndex + 1) {
+                nextBtn.classList.remove('hidden');
+            } else {
+                setTimeout(showEndScreen, 2000);
+            }
+        }
+        
+        function showTransition() {
+            quizContainer.classList.add('hidden');
+            transitionScreen.classList.remove('hidden');
+            
+            setTimeout(() => {
+                transitionScreen.classList.add('hidden');
+                quizContainer.classList.remove('hidden');
+                currentQuestionIndex++;
+                showQuestion();
+            }, 2000); // Duração da animação
+        }
+
+        function showEndScreen() {
+            quizContainer.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            const percentage = Math.round((score / quizData.length) * 100);
+            finalScoreEl.textContent = `${percentage}% de acertos`;
+        }
+
+        startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', showTransition);
+        restartBtn.addEventListener('click', () => {
+             endScreen.classList.add('hidden');
+             startScreen.classList.remove('hidden');
+        });
+
+    </script>
+</body>
+</html>
+
